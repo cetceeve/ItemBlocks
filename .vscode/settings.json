@@ -1,0 +1,7 @@
+{
+    "solidity.formatter": "forge",
+    "solidity.packageDefaultDependenciesContractsDirectory": "contract/src",
+    "solidity.packageDefaultDependenciesDirectory": "contract/lib",
+    "svelte.enable-ts-plugin": true,
+    "svelte.plugin.typescript.diagnostics.enable": false,
+}
