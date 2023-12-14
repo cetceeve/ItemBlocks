@@ -17,6 +17,7 @@
     "@metamask/detect-provider": "^2.0.0",
     "@metamask/providers": "^14.0.2",
     "@picocss/pico": "^1.5.10",
+    "events": "^3.3.0",
     "svelte-routing": "^2.10.0",
     "web3": "^4.3.0"
   }
