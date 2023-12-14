@@ -8,6 +8,10 @@ contract ItemBlocks is ERC721, Ownable {
     struct Passport {
         string name;
         string desc;
+        string family;
+        string url;
+        string img;
+        address creator;
     }
 
     mapping (uint256 => Passport) public itemPassports;
@@ -18,22 +22,31 @@ contract ItemBlocks is ERC721, Ownable {
     {}
 
     function _baseURI() internal pure override returns (string memory) {
-        return "kth.se";
+        return "";
     }
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
     }
 
-    function createPassport(uint tokenId, string calldata name, string calldata desc) public {
-        itemPassports[tokenId] = Passport ({
-            name: name,
-            desc: desc
-        });
+    function createPassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
+        (tokenId,  ) = updatePassport(tokenId, name, desc, family, url, img);
+        return tokenId;
     }
 
-    function passport(uint256 tokenId) public view returns (Passport memory) {
-        Passport memory p = itemPassports[tokenId];
-        return p;
+    function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256, Passport memory) {
+        itemPassports[tokenId] = Passport ({
+            name: name,
+            desc: desc,
+            family: family,
+            url: url,
+            img: img,
+            creator: msg.sender
+        });
+        return (tokenId, itemPassports[tokenId]);
+    }
+
+    function getPassport(uint256 tokenId) public view returns (Passport memory) {
+        return itemPassports[tokenId];
     }
 }
