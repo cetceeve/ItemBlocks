@@ -8,6 +8,7 @@
   import Passport from './lib/Passport.svelte'
   import Home from './lib/Home.svelte';
   import { writable } from 'svelte/store';
+    import Create from './lib/Create.svelte';
 
   const activeAcc = writable("");
 
@@ -81,6 +82,9 @@
     </Route>    
     <Route path="/item/:id" let:params>
       <Passport id={params.id} activeAcc={$activeAcc}/>
+    </Route>
+    <Route path="/create">
+      <Create activeAcc={$activeAcc}/>
     </Route>
   </main>
 </Router>

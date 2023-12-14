@@ -4,7 +4,9 @@
 
 <div class="center">
     <h2>Your digital passport for your physical items</h2>
-    <button><strong>CREATE</strong></button>
+    <Link to="/create">
+        <button><strong>CREATE</strong></button>
+    </Link>
     <p>Create a new Item Passport now!</p>
 </div>
 <Link to="/item/1">
