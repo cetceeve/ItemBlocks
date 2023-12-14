@@ -14,6 +14,6 @@ RUN npm run build
 # stage 2 - build the final image and copy the react build files
 FROM nginx
 COPY --from=build /app/dist /var/www/html
-# RUN rm /etc/nginx/conf.d/default.conf
-# COPY ./app/nginx/nginx.conf /etc/nginx/conf.d
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./app/nginx/nginx.conf /etc/nginx/conf.d
 CMD ["nginx", "-g", "daemon off;"]
