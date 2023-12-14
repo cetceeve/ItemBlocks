@@ -1,12 +1,15 @@
 <script>
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import { Router, Link, Route } from "svelte-routing";
   import "@picocss/pico";
   // This function detects most providers injected at window.ethereum.
   import detectEthereumProvider from '@metamask/detect-provider';
+  import Passport from './lib/Passport.svelte'
+  import Home from './lib/Home.svelte';
+  import { writable } from 'svelte/store';
 
-  let activeAcc = "";
+  const activeAcc = writable("");
 
   async function connect() {
     if (!window.ethereum) {
@@ -24,14 +27,14 @@
         })
         
         console.log(accounts)
-        activeAcc = accounts[0]
+        $activeAcc = accounts[0]
 
         // add listener for account changes
         window.ethereum.on('accountsChanged', (accounts) => {
           if (accounts.length > 0) {
-            activeAcc = accounts[0];
+            $activeAcc = accounts[0];
           } else {
-            activeAcc = "";
+            $activeAcc = "";
           }
         });
     } catch(err) {
@@ -41,42 +44,46 @@
   }
 </script>
 
-<header>
-
-  <nav>
-    <ul>
-      <li><strong>ItemBlocks</strong></li>
-    </ul>
-    
-    <ul>
-      <li>
-        {#await detectEthereumProvider()}
-          <button class="secondary outline" disabled>Connect</button>
-        {:then provider}
-          {#if provider == null}
-            <a href="https://metamask.io" role="button" class="primary">Install Metamask</a>
-          {:else}
-            {#if activeAcc.length > 0}
-              <input id="activeAccount" type="text" value={activeAcc}  aria-invalid="false" readonly>
+<Router>
+  <header>
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">
+            <strong>ItemBlocks</strong>
+          </Link>
+        </li>
+      </ul>
+      
+      <ul>
+        <li>
+          {#await detectEthereumProvider()}
+            <button class="secondary outline" disabled>Connect</button>
+          {:then provider}
+            {#if provider == null}
+              <a href="https://metamask.io" role="button" class="primary">Install Metamask</a>
             {:else}
-              <button class="primary" on:click={connect}>Connect</button>
+              {#if $activeAcc.length > 0}
+                <input id="activeAccount" type="text" value={$activeAcc}  aria-invalid="false" readonly>
+              {:else}
+                <button class="primary" on:click={connect}>Connect</button>
+              {/if}
             {/if}
-          {/if}
-        {/await}
-      </li>
-    </ul>
-  </nav>
-</header>
-
-<main class="container">
-
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-</main>
+          {/await}
+        </li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main class="container">
+    <Route path="/">
+      <Home />
+    </Route>    
+    <Route path="/item/:id" let:params>
+      <Passport id={params.id} activeAcc={$activeAcc}/>
+    </Route>
+  </main>
+</Router>
 
 <style>
 header {
