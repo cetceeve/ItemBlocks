@@ -15,6 +15,7 @@ contract ItemBlocks is ERC721, Ownable {
     }
 
     mapping (uint256 => Passport) public itemPassports;
+    mapping (uint256 => address[]) public allItemOwners;
 
     constructor(address initialOwner)
         ERC721("ItemBlocks", "ITM")
@@ -30,23 +31,46 @@ contract ItemBlocks is ERC721, Ownable {
     }
 
     function createPassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
+        updateOwnership(0, msg.sender, tokenId);
         (tokenId,  ) = updatePassport(tokenId, name, desc, family, url, img);
         return tokenId;
     }
 
     function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256, Passport memory) {
+        
+        require( isEligible(tokenId, msg.sender) == true, "Mast be the owner of the item od the creator of it" );
+
         itemPassports[tokenId] = Passport ({
             name: name,
             desc: desc,
             family: family,
             url: url,
             img: img,
-            creator: msg.sender
         });
         return (tokenId, itemPassports[tokenId]);
+        
     }
 
     function getPassport(uint256 tokenId) public view returns (Passport memory) {
         return itemPassports[tokenId];
+    }
+
+    // isEligible is a funtion that it takes the tokenId and userAddress and checks
+    // if the user is eligible user for this item (tokenId)
+    function isEligible(uint256 tokenId, address userAddress) returns(bool){
+        if (userAddress == ownerOf(tokenID) || userAddress == allItemOwners[tokenId][0]) return true;
+        return false;
+    }
+
+
+    // updateOwnership is a function that we use it chane owners of our NFT (item)
+    // Also we use it to add all the owners of an NFT in a list of owners.
+    function updateOwnership(address currentOwnerAddress, address nextOwnerAddress, uint256 tokenId) public{
+        if (allItemOwners[tokenId].length == 0){
+            allItemOwners[tokenId].push(nextOwnerAddress);
+        }else{ 
+            safeTransferFrom(currentOwnerAddress, nextOwnerAddress, tokenId);
+            allItemOwners[tokenId].push(nextOwnerAddress);
+        }
     }
 }
