@@ -15,6 +15,7 @@ contract ItemBlocks is ERC721, Ownable {
 
     mapping (uint256 => Passport) public itemPassports;
     mapping (uint256 => address[]) public allItemOwners;
+    mapping  (address => uint256[]) public userItems;
 
     constructor(address initialOwner)
         ERC721("ItemBlocksTest6", "IB6")
@@ -72,5 +73,16 @@ contract ItemBlocks is ERC721, Ownable {
             safeTransferFrom(currentOwnerAddress, nextOwnerAddress, tokenId);
             allItemOwners[tokenId].push(nextOwnerAddress);
         }
+    }
+    
+    function getUserHistory(uint256 tokenId) public view  returns(address[] memory){
+        require( tokenId != 0, "Please give a valid item ID. 0 is not eligible item ID" );
+        require( _ownerOf(tokenId) != address(0), string(abi.encodePacked("The token is not valid. There is no such token as" , tokenId)) );
+        return allItemOwners[tokenId];
+    }
+
+    function getUserItemTokens(address userAddress) public view returns(uint256[] memory) {
+        
+        return userItems[userAddress];
     }
 }
