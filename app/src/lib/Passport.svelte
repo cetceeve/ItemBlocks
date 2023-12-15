@@ -15,7 +15,7 @@
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(
     ABI,
-    "0x619b0cC263C1c64aD7cB0b73527b8C1795F4899d",
+    "0xC63B8240EA75622Db719792f69FED0bf160c58d8",
   );
 
   async function getItemData(uri) {

@@ -232,6 +232,30 @@
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "allItemOwners",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "to",
 				"type": "address"
@@ -365,11 +389,6 @@
 						"internalType": "string",
 						"name": "img",
 						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "creator",
-						"type": "address"
 					}
 				],
 				"internalType": "struct ItemBlocks.Passport",
@@ -394,6 +413,30 @@
 			}
 		],
 		"name": "isApprovedForAll",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "userAddress",
+				"type": "address"
+			}
+		],
+		"name": "isEligible",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -438,11 +481,6 @@
 				"internalType": "string",
 				"name": "img",
 				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "creator",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -677,6 +715,29 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "currentOwnerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "nextOwnerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "updateOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
@@ -740,11 +801,6 @@
 						"internalType": "string",
 						"name": "img",
 						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "creator",
-						"type": "address"
 					}
 				],
 				"internalType": "struct ItemBlocks.Passport",

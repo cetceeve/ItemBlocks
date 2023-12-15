@@ -11,14 +11,13 @@ contract ItemBlocks is ERC721, Ownable {
         string family;
         string url;
         string img;
-        address creator;
     }
 
     mapping (uint256 => Passport) public itemPassports;
     mapping (uint256 => address[]) public allItemOwners;
 
     constructor(address initialOwner)
-        ERC721("ItemBlocks", "ITM")
+        ERC721("ItemBlocksTest6", "IB6")
         Ownable(initialOwner)
     {}
 
@@ -31,7 +30,8 @@ contract ItemBlocks is ERC721, Ownable {
     }
 
     function createPassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
-        updateOwnership(0, msg.sender, tokenId);
+        _safeMint(msg.sender, tokenId);
+        updateOwnership(address(0), msg.sender, tokenId);
         (tokenId,  ) = updatePassport(tokenId, name, desc, family, url, img);
         return tokenId;
     }
@@ -45,7 +45,7 @@ contract ItemBlocks is ERC721, Ownable {
             desc: desc,
             family: family,
             url: url,
-            img: img,
+            img: img
         });
         return (tokenId, itemPassports[tokenId]);
         
@@ -57,8 +57,8 @@ contract ItemBlocks is ERC721, Ownable {
 
     // isEligible is a funtion that it takes the tokenId and userAddress and checks
     // if the user is eligible user for this item (tokenId)
-    function isEligible(uint256 tokenId, address userAddress) returns(bool){
-        if (userAddress == ownerOf(tokenID) || userAddress == allItemOwners[tokenId][0]) return true;
+    function isEligible(uint256 tokenId, address userAddress) public view returns(bool){
+        if (userAddress == ownerOf(tokenId) || userAddress == allItemOwners[tokenId][0]) return true;
         return false;
     }
 
