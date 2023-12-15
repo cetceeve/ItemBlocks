@@ -1,5 +1,5 @@
 <script>
-  export let id;
+  export let tokenId;
   export let activeAcc;
   let edit = false;
 
@@ -22,16 +22,27 @@
     console.log(data);
     return data;
   }
+
+  async function updatePassport(updated) {
+    // we are deliberatly not doing any error handling here as it will be done in the form component
+    if (!activeAcc) {
+      throw "Please connect to a wallet!";
+    }
+    return await contract.methods.updatePassport(
+      tokenId, updated.name, updated.desc, updated.family, updated.url, updated.img
+    ).send({from: activeAcc});
+  }
 </script>
 
-<span>{activeAcc}</span>
-{#await contract.methods.getPassport(parseInt(id)).call()}
+{#await contract.methods.getPassport(parseInt(tokenId)).call()}
   <article aria-busy="true">loading nft data</article>
 {:then data}
   {#if edit}
     <article>
       <header>Edit the item</header>
-      <PassportForm {...data} onSubmit={(values, context) => {edit = false}}/>
+      <PassportForm {...data}
+        onSubmit={(values) => updatePassport(values)}
+        closeForm={() => {edit = false}}/>
     </article>
   {:else}
     <PassportCard {...data}/>
