@@ -1,22 +1,15 @@
 <script>
-  import { Web3 } from "web3";
-  import ABI from "../assets/ABI.json";
   import PassportCard from "./PassportCard.svelte";
   import PassportForm from "./PassportForm.svelte";
   import QRCode from 'qrcode'
 
   export let tokenId;
   export let activeAcc;
+  export let contract;
   let edit = false;
 
   let params = new URL(document.location).searchParams;
   let qrcode = params.get("qrcode") == "true" ? true : false;
-
-  const web3 = new Web3(window.ethereum);
-  const contract = new web3.eth.Contract(
-    ABI,
-    "0xC63B8240EA75622Db719792f69FED0bf160c58d8",
-  );
 
   async function getItemData(uri) {
     const response = await fetch(uri);
