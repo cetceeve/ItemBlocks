@@ -1,30 +1,20 @@
 <script>
-  import { Web3 } from "web3";
-  import ABI from "../assets/ABI.json";
   import PassportCard from "./PassportCard.svelte";
   import PassportForm from "./PassportForm.svelte";
+  import PassportLoader from "./PassportLoader.svelte";
   import QRCode from 'qrcode'
+    import TransferOwner from "./TransferOwner.svelte";
 
   export let tokenId;
   export let activeAcc;
+  export let contract;
   let edit = false;
+  let ownershipHistory = false;
+  let transferDialog = false;
 
   let params = new URL(document.location).searchParams;
   let qrcode = params.get("qrcode") == "true" ? true : false;
-
-  const web3 = new Web3(window.ethereum);
-  const contract = new web3.eth.Contract(
-    ABI,
-    "0xC63B8240EA75622Db719792f69FED0bf160c58d8",
-  );
-
-  async function getItemData(uri) {
-    const response = await fetch(uri);
-    console.log(response);
-    const data = await response.json();
-    console.log(data);
-    return data;
-  }
+  
 
   async function updatePassport(updated) {
     // we are deliberatly not doing any error handling here as it will be done in the form component
@@ -42,9 +32,7 @@
   }
 </script>
 
-{#await contract.methods.getPassport(tokenId).call()}
-  <article aria-busy="true">loading nft data</article>
-{:then data}
+<PassportLoader {contract} {tokenId} let:data>
   {#if edit}
     <article>
       <header>Edit the item</header>
@@ -56,8 +44,11 @@
     <PassportCard {...data}/>
     <button class="outline" on:click={() => {qrcode = true}}>Show QR code</button>
     <button class="outline" on:click={() => {edit = true}}>EDIT</button>
+    <button class="outline" on:click={() => {ownershipHistory = true}}>Show Ownership History</button>
+    <button class="outline" on:click={() => {transferDialog = true}}>Change Ownership</button>
   {/if}
-{/await}
+</PassportLoader>
+
 
 <dialog open={qrcode}>
   <div>
@@ -69,3 +60,44 @@
     <button on:click={() => {qrcode = false}}>Close</button>
   </div>
 </dialog>
+
+<dialog open={ownershipHistory}>
+  <div class="container">
+    {#await contract.methods.getUserHistory(tokenId).call()}
+      <p aria-busy="true">fetching history</p>
+    {:then owners}
+      {#each owners as owner}
+        <figure>
+          <a class="ownerlink" href={"https://etherscan.io/address/" + owner}>{owner}</a>
+        </figure>
+        <hr />
+      {/each}
+    {/await}
+    <button on:click={() => {ownershipHistory = false}}>Close</button>
+  </div>
+</dialog>
+
+<dialog open={transferDialog}>
+  <div class="container">
+    <button class="outline" on:click={() => {transferDialog = false}}>Close</button>
+    <TransferOwner {contract} {activeAcc} {tokenId}
+      closeForm={() => {transferDialog = false; ownershipHistory = true;}}/>
+  </div>
+</dialog>
+
+<style>
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+  }
+
+  .ownerlink {
+    white-space: nowrap;
+  }
+ 
+ 
+</style>

@@ -14,7 +14,9 @@
     <img src={img} alt="thumbnail" />
   {/if}
   <p>{desc}</p>
-  <a href={url} role="button" class="secondary itemlink">Item Website</a>
+  {#if url}
+    <a href={url} role="button" class="secondary itemlink">Item Website</a>
+  {/if}
   <footer>{family}</footer>
 </article>
 

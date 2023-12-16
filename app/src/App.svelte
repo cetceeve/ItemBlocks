@@ -9,8 +9,16 @@
   import Home from "./lib/Home.svelte";
   import { writable } from "svelte/store";
   import Create from "./lib/Create.svelte";
+  import { Web3 } from "web3";
+  import ABI from "./assets/ABI.json";
 
   const activeAcc = writable("");
+
+  const web3 = new Web3(window.ethereum);
+  const contract = new web3.eth.Contract(
+    ABI,
+    "0xa2C4C4b2d39C93E443885a4e1a818FFFbbDB5Ef5",
+  );
 
   async function connect() {
     if (!window.ethereum) {
@@ -82,13 +90,13 @@
 
   <main class="container">
     <Route path="/">
-      <Home />
+      <Home {contract} activeAcc={$activeAcc}/>
     </Route>
     <Route path="/item/:tokenId" let:params>
-      <Passport tokenId={params.tokenId} activeAcc={$activeAcc} />
+      <Passport tokenId={params.tokenId} activeAcc={$activeAcc} {contract}/>
     </Route>
     <Route path="/create">
-      <Create activeAcc={$activeAcc} />
+      <Create activeAcc={$activeAcc} {contract}/>
     </Route>
   </main>
 </Router>
