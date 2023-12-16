@@ -11,6 +11,7 @@
   import Create from "./lib/Create.svelte";
   import { Web3 } from "web3";
   import ABI from "./assets/ABI.json";
+    import History from "./lib/History.svelte";
 
   const activeAcc = writable("");
 
@@ -94,6 +95,9 @@
     </Route>
     <Route path="/item/:tokenId" let:params>
       <Passport tokenId={params.tokenId} activeAcc={$activeAcc} {contract}/>
+    </Route>
+    <Route path="/history/:tokenId" let:params>
+      <History tokenId={params.tokenId} activeAcc={$activeAcc} {contract}/>
     </Route>
     <Route path="/create">
       <Create activeAcc={$activeAcc} {contract}/>

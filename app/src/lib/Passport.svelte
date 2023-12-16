@@ -3,7 +3,8 @@
   import PassportForm from "./PassportForm.svelte";
   import PassportLoader from "./PassportLoader.svelte";
   import QRCode from 'qrcode'
-    import TransferOwner from "./TransferOwner.svelte";
+  import TransferOwner from "./TransferOwner.svelte";
+  import { Link } from "svelte-routing";
 
   export let tokenId;
   export let activeAcc;
@@ -42,8 +43,11 @@
     </article>
   {:else}
     <PassportCard {...data}/>
+    <Link to={"/history/" + tokenId}>
+      <button>Show history</button>
+    </Link>
+    <button on:click={() => {edit = true}}>Edit</button>
     <button class="outline" on:click={() => {qrcode = true}}>Show QR code</button>
-    <button class="outline" on:click={() => {edit = true}}>EDIT</button>
     <button class="outline" on:click={() => {ownershipHistory = true}}>Show Ownership History</button>
     <button class="outline" on:click={() => {transferDialog = true}}>Change Ownership</button>
   {/if}

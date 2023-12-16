@@ -17,7 +17,9 @@
   {#if url}
     <a href={url} role="button" class="secondary itemlink">Item Website</a>
   {/if}
-  <footer>{family}</footer>
+  {#if family}
+    <footer>{family}</footer>
+  {/if}
 </article>
 
 <style>
