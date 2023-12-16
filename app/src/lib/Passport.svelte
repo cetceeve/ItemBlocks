@@ -3,12 +3,14 @@
   import PassportForm from "./PassportForm.svelte";
   import PassportLoader from "./PassportLoader.svelte";
   import QRCode from 'qrcode'
+    import TransferOwner from "./TransferOwner.svelte";
 
   export let tokenId;
   export let activeAcc;
   export let contract;
   let edit = false;
   let ownershipHistory = false;
+  let transferDialog = false;
 
   let params = new URL(document.location).searchParams;
   let qrcode = params.get("qrcode") == "true" ? true : false;
@@ -43,6 +45,7 @@
     <button class="outline" on:click={() => {qrcode = true}}>Show QR code</button>
     <button class="outline" on:click={() => {edit = true}}>EDIT</button>
     <button class="outline" on:click={() => {ownershipHistory = true}}>Show Ownership History</button>
+    <button class="outline" on:click={() => {transferDialog = true}}>Change Ownership</button>
   {/if}
 </PassportLoader>
 
@@ -71,6 +74,14 @@
       {/each}
     {/await}
     <button on:click={() => {ownershipHistory = false}}>Close</button>
+  </div>
+</dialog>
+
+<dialog open={transferDialog}>
+  <div class="container">
+    <button class="outline" on:click={() => {transferDialog = false}}>Close</button>
+    <TransferOwner {contract} {activeAcc} {tokenId}
+      closeForm={() => {transferDialog = false; ownershipHistory = true;}}/>
   </div>
 </dialog>
 
