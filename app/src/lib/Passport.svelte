@@ -2,6 +2,7 @@
   import PassportCard from "./PassportCard.svelte";
   import PassportForm from "./PassportForm.svelte";
   import QRCode from 'qrcode'
+    import PassportLoader from "./PassportLoader.svelte";
 
   export let tokenId;
   export let activeAcc;
@@ -10,14 +11,6 @@
 
   let params = new URL(document.location).searchParams;
   let qrcode = params.get("qrcode") == "true" ? true : false;
-
-  async function getItemData(uri) {
-    const response = await fetch(uri);
-    console.log(response);
-    const data = await response.json();
-    console.log(data);
-    return data;
-  }
 
   async function updatePassport(updated) {
     // we are deliberatly not doing any error handling here as it will be done in the form component
@@ -35,9 +28,7 @@
   }
 </script>
 
-{#await contract.methods.getPassport(tokenId).call()}
-  <article aria-busy="true">loading nft data</article>
-{:then data}
+<PassportLoader {contract} {tokenId} let:data>
   {#if edit}
     <article>
       <header>Edit the item</header>
@@ -50,7 +41,7 @@
     <button class="outline" on:click={() => {qrcode = true}}>Show QR code</button>
     <button class="outline" on:click={() => {edit = true}}>EDIT</button>
   {/if}
-{/await}
+</PassportLoader>
 
 <dialog open={qrcode}>
   <div>

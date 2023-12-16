@@ -15,10 +15,10 @@ contract ItemBlocks is ERC721, Ownable {
 
     mapping (uint256 => Passport) public itemPassports;
     mapping (uint256 => address[]) public allItemOwners;
-    mapping  (address => uint256[]) public userItems;
+    mapping  (address => uint256[]) public createdItems;
 
     constructor(address initialOwner)
-        ERC721("ItemBlocksTest6", "IB6")
+        ERC721("ItemBlocksTest8", "IB8")
         Ownable(initialOwner)
     {}
 
@@ -69,6 +69,8 @@ contract ItemBlocks is ERC721, Ownable {
     function updateOwnership(address currentOwnerAddress, address nextOwnerAddress, uint256 tokenId) public{
         if (allItemOwners[tokenId].length == 0){
             allItemOwners[tokenId].push(nextOwnerAddress);
+            createdItems[nextOwnerAddress].push(tokenId);
+
         }else{ 
             safeTransferFrom(currentOwnerAddress, nextOwnerAddress, tokenId);
             allItemOwners[tokenId].push(nextOwnerAddress);
@@ -81,8 +83,7 @@ contract ItemBlocks is ERC721, Ownable {
         return allItemOwners[tokenId];
     }
 
-    function getUserItemTokens(address userAddress) public view returns(uint256[] memory) {
-        
-        return userItems[userAddress];
+    function getCreatedItemTokens(address userAddress) public view returns(uint256[] memory) {
+        return createdItems[userAddress];
     }
 }

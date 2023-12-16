@@ -1,22 +1,40 @@
 <script>
-    import { Link } from "svelte-routing";
+  import { Link, navigate } from "svelte-routing";
+  import PassportLoader from "./PassportLoader.svelte";
+  import PassportCard from "./PassportCard.svelte";
+
+  export let contract;
+  export let activeAcc;
 </script>
 
 <div class="center">
-    <h2>Your digital passport for your physical items</h2>
-    <Link to="/create">
-        <button><strong>CREATE</strong></button>
-    </Link>
-    <p>Create a new Item Passport now!</p>
+  <h2>Your digital passport for your physical items</h2>
+  <Link to="/create">
+    <button><strong>CREATE</strong></button>
+  </Link>
+  <p>Create a new Item Passport now!</p>
 </div>
-<Link to="/item/1">
-    <button class="outline">
-        Go to Test Item
-    </button>
-</Link>
+
+{#if activeAcc}
+  <h4>You created these items:</h4>
+  {#await contract.methods.getCreatedItemTokens(activeAcc).call() then tokenList}
+    {#each tokenList as tokenId}
+      <PassportLoader {contract} {tokenId} let:data>
+        <Link to={"/item/" + tokenId}>
+          <div class="notlink">
+            <PassportCard {...data} />
+          </div>
+        </Link>
+      </PassportLoader>
+    {/each}
+  {/await}
+{/if}
 
 <style>
-.center {
+  .center {
     text-align: center;
-}
+  }
+  .notlink {
+    color: whitesmoke;
+  }
 </style>

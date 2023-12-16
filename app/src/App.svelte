@@ -17,7 +17,7 @@
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(
     ABI,
-    "0xC63B8240EA75622Db719792f69FED0bf160c58d8",
+    "0xa2C4C4b2d39C93E443885a4e1a818FFFbbDB5Ef5",
   );
 
   async function connect() {
@@ -90,13 +90,13 @@
 
   <main class="container">
     <Route path="/">
-      <Home {contract} {$activeAcc}/>
+      <Home {contract} activeAcc={$activeAcc}/>
     </Route>
     <Route path="/item/:tokenId" let:params>
-      <Passport tokenId={params.tokenId} {$activeAcc} {contract}/>
+      <Passport tokenId={params.tokenId} activeAcc={$activeAcc} {contract}/>
     </Route>
     <Route path="/create">
-      <Create {$activeAcc} {contract}/>
+      <Create activeAcc={$activeAcc} {contract}/>
     </Route>
   </main>
 </Router>
