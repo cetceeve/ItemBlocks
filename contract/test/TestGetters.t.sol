@@ -40,7 +40,12 @@ contract ItemBlocksTest is Test {
     function testFailGetCreatedItemTokensZeroAddress() public view{
         itemBlocks.getCreatedItemTokens(address(0));
     }
-
+  
+    // should fail for null address
+    function testGetCreatedItemTokensZeroAddress() public {
+        vm.expectRevert();
+        itemBlocks.getCreatedItemTokens(address(0));
+    }
     // should return list of users who owned this token
     function testGetUserHistory() public {
         assertEq(itemBlocks.getUserHistory(7)[0], address(42));
@@ -51,6 +56,11 @@ contract ItemBlocksTest is Test {
         itemBlocks.getUserHistory(1234);
     }
 
+    // should fail if token doesn't exits
+    function testUserHistoryZeroAddress() public {
+        vm.expectRevert();
+        itemBlocks.getUserHistory(1234);
+    }
     // should return passport
     function testGetPassport() public {
         ItemBlocks.Passport memory p = itemBlocks.getPassport(7);
@@ -66,4 +76,9 @@ contract ItemBlocksTest is Test {
         itemBlocks.getPassport(1234);
     }
 
+    // should fail if token doesn't exits
+    function testGetPassportNotToken() public {
+        vm.expectRevert();
+        itemBlocks.getPassport(1234);
+    }
 }

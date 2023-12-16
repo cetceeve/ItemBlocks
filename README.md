@@ -1,6 +1,10 @@
 # ItemBlocks
 Create a digital passport for your physical items.
 
+## Testing!
+
+![100 Percent Coverage](./images/100coverage.png)
+
 ## Description
 
 A dApp that allows users to create a digital passport for physical items and make the information associated with these items easily accessible.

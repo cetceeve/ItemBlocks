@@ -51,7 +51,7 @@ contract ItemBlocksTest is Test{
         itemBlocks.createPassport(7, testPassport.name, testPassport.desc, testPassport.family, testPassport.url, testPassport.img);
     }
 
-    function testUpdatePassportEligibility() public {
+    function testUpdatePassport() public {
         ItemBlocks.Passport memory testPassport = ItemBlocks.Passport({
             name: "TestItemName",
             desc: "TestItemDesc",
@@ -105,6 +105,60 @@ contract ItemBlocksTest is Test{
 
         //Not eligible user for passport updates.
         vm.prank(address(40));
+        itemBlocks.updatePassport(tokenId, updatedPassport.name, updatedPassport.desc, updatedPassport.family, updatedPassport.url, updatedPassport.img);
+    }
+
+    function testUpdatePassportNotEligibility() public {
+        ItemBlocks.Passport memory testPassport = ItemBlocks.Passport({
+            name: "TestItemName",
+            desc: "TestItemDesc",
+            family: "TestItemFamily",
+            url: "TestItemUrl",
+            img: "TestItemImg"
+        });
+
+        vm.prank(address(42));
+        uint256 tokenId = itemBlocks.createPassport(7, testPassport.name, testPassport.desc, testPassport.family, testPassport.url, testPassport.img);
+       
+        ItemBlocks.Passport memory updatedPassport = ItemBlocks.Passport({
+            name: "UpdatedItemName",
+            desc: "UpdatedItemDesc",
+            family: "UpdatedItemFamily",
+            url: "UpdatedItemUrl",
+            img: "UpdatedItemImg"
+        });
+
+        //Not eligible user for passport updates.
+        vm.prank(address(40));
+        vm.expectRevert();
+        itemBlocks.updatePassport(tokenId, updatedPassport.name, updatedPassport.desc, updatedPassport.family, updatedPassport.url, updatedPassport.img);
+    }
+
+    function testUpdatePassportEligibileCreator() public {
+        ItemBlocks.Passport memory testPassport = ItemBlocks.Passport({
+            name: "TestItemName",
+            desc: "TestItemDesc",
+            family: "TestItemFamily",
+            url: "TestItemUrl",
+            img: "TestItemImg"
+        });
+
+        vm.prank(address(42));
+        uint256 tokenId = itemBlocks.createPassport(7, testPassport.name, testPassport.desc, testPassport.family, testPassport.url, testPassport.img);
+       
+        vm.prank(address(42));
+        itemBlocks.updateOwnership(address(42), address(43), 7);
+
+        ItemBlocks.Passport memory updatedPassport = ItemBlocks.Passport({
+            name: "UpdatedItemName",
+            desc: "UpdatedItemDesc",
+            family: "UpdatedItemFamily",
+            url: "UpdatedItemUrl",
+            img: "UpdatedItemImg"
+        });
+
+        //Eligible as the creator
+        vm.prank(address(42));
         itemBlocks.updatePassport(tokenId, updatedPassport.name, updatedPassport.desc, updatedPassport.family, updatedPassport.url, updatedPassport.img);
     }
 

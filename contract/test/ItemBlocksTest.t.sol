@@ -57,11 +57,6 @@ contract ItemBlocksTest is Test{
         assertTrue(itemBlocks.isEligible(12, address(420)));
     }
 
-    // TESTS FOR updateOwnership
-    function testOwnershipShouldChange() public {
-
-    }
-
     // TESTS FOR setCreator
     // should place owner into the allItemOwners array
     function testSetCreator() public {
@@ -74,6 +69,12 @@ contract ItemBlocksTest is Test{
         itemBlocks.exposed_setCreator(address(0), 12);
     }
 
+    // should fail because zero address should not be allowed
+    function testUpdateSetCreatorZeroAddress() public {
+        vm.expectRevert();
+        itemBlocks.exposed_setCreator(address(0), 12);
+    }
+
     // should fail because token 13 should not be in the mapping
     function testFailUpdateSetCreatorNoToken() public {
         itemBlocks.exposed_setCreator(address(42), 12);
@@ -83,6 +84,13 @@ contract ItemBlocksTest is Test{
     // should fail because token is already owned
     function testFailSetCreatorAlreadyOwner() public {
         itemBlocks.exposed_setCreator(address(42), 12);
+        itemBlocks.exposed_setCreator(address(44), 12);
+    }
+
+    // should fail because token is already owned
+    function testSetCreatorAlreadyOwner() public {
+        itemBlocks.exposed_setCreator(address(42), 12);
+        vm.expectRevert();
         itemBlocks.exposed_setCreator(address(44), 12);
     }
 

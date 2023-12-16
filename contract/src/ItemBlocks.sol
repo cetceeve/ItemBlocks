@@ -40,7 +40,7 @@ contract ItemBlocks is ERC721, Ownable {
     }
 
     function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {        
-        require( isEligible(tokenId, msg.sender) == true, "Must be the owner of the item or the creator of it" );
+        require( isEligible(tokenId, msg.sender), "Must be the owner of the item or the creator of it" );
 
         itemPassports[tokenId] = Passport ({
             name: name,
@@ -67,8 +67,7 @@ contract ItemBlocks is ERC721, Ownable {
     // isEligible is a funtion that it takes the tokenId and userAddress and checks
     // if the user is eligible user for this item (tokenId)
     function isEligible(uint256 tokenId, address userAddress) public view returns(bool){
-        if (userAddress == ownerOf(tokenId) || userAddress == allItemOwners[tokenId][0]) return true;
-        return false;
+        return (userAddress == ownerOf(tokenId) || userAddress == allItemOwners[tokenId][0]);
     }
 
     function setCreator(address creatorAddress, uint256 tokenId) internal {
