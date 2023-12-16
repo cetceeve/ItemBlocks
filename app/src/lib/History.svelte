@@ -6,10 +6,6 @@
     import { Link } from "svelte-routing";
   const web3 = new Web3(window.ethereum);
 
-  //let etherscanURL = `https://api.etherscan.io/api?module=logs&action=getLogs&fromBlock=10221728&toBlock=${web3.eth.getBlockNumber()}&address=0x5f0B6625541d613ea33098d2afdE2aE466dbF1ec&topic0=${web3.eth.abi.encodeEventSignature('PassportUpdate(uint256,address,uint8,string,string,string,string,string)')}&topic0_1_opr=and&topic1=${web3.eth.abi.encodeParameter("uint256", tokenId)}&page=1&offset=10&apikey=8GMF6CSE9AW2BQ2T5XZHT5BGJPBQSSY29H`;
-  //console.log(etherscanURL)
-  //fetch(etherscanURL).then((res) => res.json()).then((data) => console.log(data)).catch((err) => console.error(err))
-
   async function getHistory() {
     let history = await contract.getPastEvents("PassportUpdate", {
       filter: {

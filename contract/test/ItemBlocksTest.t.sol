@@ -35,6 +35,11 @@ contract ItemBlocksTest is Test{
         itemBlocks.safeMint(address(42), 0);
         assertEq(itemBlocks.ownerOf(0), address(42));
     }
+    
+    function testFailSafeMintZeroAddress() public {
+        vm.prank(address(0));
+        itemBlocks.safeMint(address(0), 0);
+    }
 
     // TESTS FOR isEligible
     // should pass because 42 minted token 12
