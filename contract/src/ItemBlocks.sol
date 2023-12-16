@@ -15,10 +15,17 @@ contract ItemBlocks is ERC721, Ownable {
 
     mapping (uint256 => Passport) public itemPassports;
     mapping (uint256 => address[]) public allItemOwners;
-    mapping  (address => uint256[]) public createdItems;
+    mapping (address => uint256[]) public createdItems;
+
+    enum Role {Owner, Creator}
+
+    event PassportUpdate(uint256 indexed tokenId, address indexed editor, Role role, string name, string desc, string family, string url, string img);
+    // from ERC721: Transfer(from, to, tokenId)
+    // we can track who created a passport
+    // we can track ownership changes
 
     constructor(address initialOwner)
-        ERC721("ItemBlocksTest8", "IB8")
+        ERC721("ItemBlocksTest9", "IB9")
         Ownable(initialOwner)
     {}
 
@@ -33,11 +40,10 @@ contract ItemBlocks is ERC721, Ownable {
     function createPassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
         _safeMint(msg.sender, tokenId);
         updateOwnership(address(0), msg.sender, tokenId);
-        (tokenId,  ) = updatePassport(tokenId, name, desc, family, url, img);
-        return tokenId;
+        return updatePassport(tokenId, name, desc, family, url, img);
     }
 
-    function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256, Passport memory) {
+    function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
         
         require( isEligible(tokenId, msg.sender) == true, "Mast be the owner of the item od the creator of it" );
 
@@ -48,7 +54,18 @@ contract ItemBlocks is ERC721, Ownable {
             url: url,
             img: img
         });
-        return (tokenId, itemPassports[tokenId]);
+
+        emit PassportUpdate(
+            tokenId,
+            msg.sender,
+            msg.sender == ownerOf(tokenId) ? Role.Owner: Role.Creator,
+            name,
+            desc,
+            family,
+            url,
+            img);
+
+        return (tokenId);
         
     }
 

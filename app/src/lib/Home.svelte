@@ -34,7 +34,4 @@
   .center {
     text-align: center;
   }
-  .notlink {
-    color: whitesmoke;
-  }
 </style>
