@@ -29,23 +29,18 @@ contract ItemBlocks is ERC721, Ownable {
         Ownable(initialOwner)
     {}
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "";
-    }
-
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
     }
 
     function createPassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
         _safeMint(msg.sender, tokenId);
-        updateOwnership(address(0), msg.sender, tokenId);
+        setCreator(msg.sender, tokenId);
         return updatePassport(tokenId, name, desc, family, url, img);
     }
 
-    function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
-        
-        require( isEligible(tokenId, msg.sender) == true, "Mast be the owner of the item od the creator of it" );
+    function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {        
+        require( isEligible(tokenId, msg.sender) == true, "Must be the owner of the item or the creator of it" );
 
         itemPassports[tokenId] = Passport ({
             name: name,
@@ -69,10 +64,6 @@ contract ItemBlocks is ERC721, Ownable {
         
     }
 
-    function getPassport(uint256 tokenId) public view returns (Passport memory) {
-        return itemPassports[tokenId];
-    }
-
     // isEligible is a funtion that it takes the tokenId and userAddress and checks
     // if the user is eligible user for this item (tokenId)
     function isEligible(uint256 tokenId, address userAddress) public view returns(bool){
@@ -80,27 +71,69 @@ contract ItemBlocks is ERC721, Ownable {
         return false;
     }
 
-
-    // updateOwnership is a function that we use it chane owners of our NFT (item)
-    // Also we use it to add all the owners of an NFT in a list of owners.
+    function setCreator(address creatorAddress, uint256 tokenId) internal {
+        require(allItemOwners[tokenId].length == 0, "There is already a creator for this item.");
+        require(creatorAddress != address(0), "You are not allowed to have a zero address.");
+        allItemOwners[tokenId].push(creatorAddress);
+        createdItems[creatorAddress].push(tokenId);
+    } 
+    
+    /**
+     * @notice updateOwnership is a function that we use it change owners of our NFT (item).
+     * Also we use it to add the new owner of an NFT in a list of all owners for a specific NFT.
+     * 
+     * @param currentOwnerAddress ethereum address of current tokenId owner
+     * @param nextOwnerAddress ethereum address we want to transfer ownership to
+     * @param tokenId uint256 id of token we want to update ownership for
+     */
     function updateOwnership(address currentOwnerAddress, address nextOwnerAddress, uint256 tokenId) public{
-        if (allItemOwners[tokenId].length == 0){
-            allItemOwners[tokenId].push(nextOwnerAddress);
-            createdItems[nextOwnerAddress].push(tokenId);
-
-        }else{ 
-            safeTransferFrom(currentOwnerAddress, nextOwnerAddress, tokenId);
-            allItemOwners[tokenId].push(nextOwnerAddress);
-        }
+        // safe transfer ensures transfer is only possible if sender owns the item
+        safeTransferFrom(currentOwnerAddress, nextOwnerAddress, tokenId);
+        allItemOwners[tokenId].push(nextOwnerAddress);
     }
     
+    /**
+     * @notice Function returns a list of addresses that have owner this item.
+     * The first address is the item creator and the last is the current owner of the item.
+     * 
+     * @param tokenId id of a nft token
+     * @return address[] list of all owners of token with tokenId
+     * 
+     * @dev Fails is tokenId does .
+     */
     function getUserHistory(uint256 tokenId) public view  returns(address[] memory){
-        require( tokenId != 0, "Please give a valid item ID. 0 is not eligible item ID" );
         require( _ownerOf(tokenId) != address(0), string(abi.encodePacked("The token is not valid. There is no such token as" , tokenId)) );
         return allItemOwners[tokenId];
     }
-
+    /**
+    * @notice Function returns a list of user items.  
+    * 
+    * @param userAddress the user's Address for whome all the items will be retun.
+    *                    Like user's intentory.
+    *
+    * @return createdItems[] list of all user items.
+    *
+    * @dev fails if the userAdderss is a zero address.
+     */
     function getCreatedItemTokens(address userAddress) public view returns(uint256[] memory) {
+        require(userAddress != address(0), "You are not allowed to see the created tokens with an zero address.");
         return createdItems[userAddress];
+    }    
+    
+
+    /**
+    * @notice Function returns a Passport for an item (tokenId).
+    *
+    * @param tokenId the item's Id that we want to retun the Passport.
+    *
+    * @return itemPassport[tokenId] the Passport of the item (token).
+    *
+    * @dev fails if the tokenId does not exists.
+     */
+    function getPassport(uint256 tokenId) public view returns (Passport memory) {
+        require( _ownerOf(tokenId) != address(0), string(abi.encodePacked("The token is not valid. There is no such token as" , tokenId)));
+        return itemPassports[tokenId];
     }
+
+
 }
