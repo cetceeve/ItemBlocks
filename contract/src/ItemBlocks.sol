@@ -64,12 +64,34 @@ contract ItemBlocks is ERC721, Ownable {
         
     }
 
-    // isEligible is a funtion that it takes the tokenId and userAddress and checks
-    // if the user is eligible user for this item (tokenId)
+    /**
+    * @notice isEligible is a function that checks if the user is eligible for item informaton
+    * changes. 
+    *
+    * @param tokenId uint256 id of the item that the user wants to make the changes.
+    * @param userAddress ethereum address of the user that wants to make the changes
+    * on items information.
+    *
+    * @return true if the userAddress and the owner address of the item are same.
+    * Meaning the user is the owner of the item.
+    * @return true if the userAddress is the first owner of the item.
+    * Meaning the user is the creator of the item.
+    * @return false if the the user with the userAddress is neither the owner or
+    * the creator of the item.
+     */
     function isEligible(uint256 tokenId, address userAddress) public view returns(bool){
         return (userAddress == ownerOf(tokenId) || userAddress == allItemOwners[tokenId][0]);
     }
 
+    /**
+    * @notice setCreator is a function that adds creator to a new item.
+    * 
+    * @param creatorAddress ethereum address of the creator of the new item.
+    * @param tokenId uint256 id of the token that is created.
+    * 
+    * @dev fails if there is allread a creator for the specific tokenId.
+    * @dev fails if the user has a zero address.
+     */
     function setCreator(address creatorAddress, uint256 tokenId) internal {
         require(allItemOwners[tokenId].length == 0, "There is already a creator for this item.");
         require(creatorAddress != address(0), "You are not allowed to have a zero address.");
@@ -92,22 +114,22 @@ contract ItemBlocks is ERC721, Ownable {
     }
     
     /**
-     * @notice Function returns a list of addresses that have owner this item.
+     * @notice getUserHistory is a function the returns a list of addresses that have owner this item.
      * The first address is the item creator and the last is the current owner of the item.
      * 
-     * @param tokenId id of a nft token
+     * @param tokenId uint256 id of a nft token
      * @return address[] list of all owners of token with tokenId
      * 
-     * @dev Fails is tokenId does .
+     * @dev fails if tokenId does not exists.
      */
     function getUserHistory(uint256 tokenId) public view  returns(address[] memory){
         require( _ownerOf(tokenId) != address(0), string(abi.encodePacked("The token is not valid. There is no such token as" , tokenId)) );
         return allItemOwners[tokenId];
     }
     /**
-    * @notice Function returns a list of user items.  
+    * @notice getCreatedItemTokens returns a list of user items.  
     * 
-    * @param userAddress the user's Address for whome all the items will be retun.
+    * @param userAddress ethereum user Address for whome all the items will be retun.
     *                    Like user's intentory.
     *
     * @return createdItems[] list of all user items.
@@ -121,9 +143,9 @@ contract ItemBlocks is ERC721, Ownable {
     
 
     /**
-    * @notice Function returns a Passport for an item (tokenId).
+    * @notice getPassort is a function that returns a Passport for an item (tokenId).
     *
-    * @param tokenId the item's Id that we want to retun the Passport.
+    * @param tokenId uint256 id item's Id that we want to retun the Passport.
     *
     * @return itemPassport[tokenId] the Passport of the item (token).
     *
