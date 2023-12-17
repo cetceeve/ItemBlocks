@@ -16,7 +16,7 @@
 </div>
 
 {#if activeAcc}
-  <h4>You created these items:</h4>
+  <h4>You created these item passports:</h4>
   {#await contract.methods.getCreatedItemTokens(activeAcc).call() then tokenList}
     {#each tokenList as tokenId}
       <PassportLoader {contract} {tokenId} let:data>

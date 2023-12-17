@@ -123,11 +123,11 @@ contract ItemBlocks is ERC721, Ownable {
     * on items information.
     *
     * @return true if the userAddress and the owner address of the item are same.
-    * Meaning the user is the owner of the item.
-    * @return true if the userAddress is the first owner of the item.
-    * Meaning the user is the creator of the item.
-    * @return false if the the user with the userAddress is neither the owner or
-    * the creator of the item.
+    *         Meaning the user is the owner of the item.
+    * true    if the userAddress is the first owner of the item.
+    *         Meaning the user is the creator of the item.
+    * false   if the the user with the userAddress is neither the owner or
+    *         the creator of the item.
      */
     function isEligible(uint256 tokenId, address userAddress) public view returns(bool){
         return (userAddress == ownerOf(tokenId) || userAddress == allItemOwners[tokenId][0]);
