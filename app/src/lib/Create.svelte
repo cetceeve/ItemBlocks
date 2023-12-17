@@ -33,7 +33,7 @@
 </script>
 
 <article>
-  <header>Create a new item passport</header>
+  <header><strong>Create a new item passport</strong></header>
   <PassportForm
     name=""
     desc=""
@@ -41,6 +41,7 @@
     url=""
     img=""
     onSubmit={(values) => createPassport(values)}
-    closeForm={() => navigate("/item/" + tokenId + "/?qrcode=true", {replace: true})}
+    onSuccess={() => navigate("/item/" + tokenId + "/?qrcode=true", {replace: true})}
+    closeForm={() => navigate("/", {replace: true})}
   />
 </article>

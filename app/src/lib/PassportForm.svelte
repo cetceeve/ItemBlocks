@@ -5,6 +5,7 @@
   export let url;
   export let img;
   export let onSubmit;
+  export let onSuccess;
   export let closeForm;
 
   let errorMsg = "";
@@ -32,7 +33,7 @@
       // Do something with the returned value from `onSubmit`.
       console.log(response);
       console.log("on success was called");
-      closeForm();
+      onSuccess();
     },
     onError(err, context) {
       // Do something with the error thrown from `onSubmit`.
@@ -49,7 +50,7 @@
   });
 </script>
 
-<form use:form>
+<form use:form style:margin-bottom="0">
   <label for="name">Item name</label>
   <input type="text" id="name" name="name" placeholder="Item name" />
   {#if $errors.name}<strong class="errorMsg">{$errors.name}</strong>{/if}
@@ -72,6 +73,7 @@
 
   <button type="submit" aria-busy={$isSubmitting} disabled={$interacted == null}>Save on chain</button>
   {#if errorMsg}<strong class="errorMsg">{errorMsg}</strong>{/if}
+  <button class="outline" on:click={() => closeForm()} style:margin-bottom="0">Cancel</button>
 </form>
 
 <style>

@@ -22,7 +22,7 @@
       <PassportLoader {contract} {tokenId} let:data>
         <Link to={"/item/" + tokenId}>
           <div class="notlink">
-            <PassportCard {...data} />
+            <PassportCard {...data} {tokenId} {contract} showOwner/>
           </div>
         </Link>
       </PassportLoader>

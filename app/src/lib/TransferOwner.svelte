@@ -38,7 +38,7 @@
 </script>
 
 <form use:form>
-  <label for="owner">Item name</label>
+  <label for="owner">Wallet address of next owner</label>
   <input type="text" id="owner" name="owner" placeholder="Next owner" />
 
   <button type="submit" aria-busy={$isSubmitting}>Transfer Ownership</button>

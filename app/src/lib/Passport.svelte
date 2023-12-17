@@ -15,7 +15,6 @@
 
   let params = new URL(document.location).searchParams;
   let qrcode = params.get("qrcode") == "true" ? true : false;
-  
 
   async function updatePassport(updated) {
     // we are deliberatly not doing any error handling here as it will be done in the form component
@@ -36,13 +35,14 @@
 <PassportLoader {contract} {tokenId} let:data>
   {#if edit}
     <article>
-      <header>Edit the item</header>
+      <header><strong>Edit the item</strong></header>
       <PassportForm {...data}
         onSubmit={(values) => updatePassport(values)}
+        onSuccess={() => {window.location.reload()}}
         closeForm={() => {edit = false}}/>
     </article>
   {:else}
-    <PassportCard {...data}/>
+    <PassportCard {...data} {contract} {tokenId} showOwner/>
     <Link to={"/history/" + tokenId}>
       <button>Show history</button>
     </Link>
@@ -55,9 +55,9 @@
 
 
 <dialog open={qrcode}>
-  <div>
+  <div class="qrcodeContainer">
     {#await generateQR(window.location.origin + window.location.pathname) then qrCodeUri}
-      <img src={qrCodeUri} alt="QrCode"/>
+      <img src={qrCodeUri} alt="QrCode" width="100%"/>
     {:catch err}
       <p>Sorry! Something went wrong!</p>
     {/await}
@@ -67,14 +67,15 @@
 
 <dialog open={ownershipHistory}>
   <div class="container">
+    <h3>Ownership History</h3>
     {#await contract.methods.getUserHistory(tokenId).call()}
       <p aria-busy="true">fetching history</p>
     {:then owners}
       {#each owners as owner}
-        <figure>
-          <a class="ownerlink" href={"https://etherscan.io/address/" + owner}>{owner}</a>
-        </figure>
-        <hr />
+      <figure>
+        <a class="ownerlink" href={"https://etherscan.io/address/" + owner}>{owner}</a>
+      </figure>
+      <hr />
       {/each}
     {/await}
     <button on:click={() => {ownershipHistory = false}}>Close</button>
@@ -83,9 +84,9 @@
 
 <dialog open={transferDialog}>
   <div class="container">
-    <button class="outline" on:click={() => {transferDialog = false}}>Close</button>
     <TransferOwner {contract} {activeAcc} {tokenId}
       closeForm={() => {transferDialog = false; ownershipHistory = true;}}/>
+    <button class="outline" on:click={() => {transferDialog = false}}>Cancel</button>
   </div>
 </dialog>
 
@@ -103,5 +104,9 @@
     white-space: nowrap;
   }
  
+  .qrcodeContainer {
+    width: 80%;
+    max-width: 20em;
+  }
  
 </style>
