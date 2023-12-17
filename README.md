@@ -21,7 +21,7 @@ There are three roles in our system Owners, Creators, and Viewers. The Owner and
 We used unit testing, static analysis as well as fuzzing to test our contract.
 We were able to achieve 100% test coverage and good results in the static analysis and fuzz tests.
 
-_Read more about our test setup in our wiki._
+_Read more about our test setup in our [wiki](https://github.com/cetceeve/ItemBlocks/wiki)._
 
 ### Coverage Report
 
@@ -39,4 +39,4 @@ You can find the static analysis report in markdown format here:
 
 ## Technnology
 
-Please check out our wiki.
+Please check out our [wiki](https://github.com/cetceeve/ItemBlocks/wiki).
