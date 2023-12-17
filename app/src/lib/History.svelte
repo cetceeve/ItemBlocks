@@ -38,7 +38,11 @@
         family={event.returnValues.family}
         url={event.returnValues.url}
         img={event.returnValues.img}/>
-      <h5 style:margin-bottom="0">Edited By:</h5>
+
+      <div style:display="flex" style:justify-content="space-between">
+        <h5 style:margin-bottom="0">Edited By:</h5>
+        <h5 style:margin-bottom="0">[{event.returnValues.role == 0 ? "Owner" : "Creator"}]</h5>
+      </div>
       <figure>
         <a class="ownerlink" href={"https://etherscan.io/address/" + event.returnValues.editor}>{event.returnValues.editor}</a>
       </figure>
