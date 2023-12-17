@@ -18,7 +18,7 @@
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(
     ABI,
-    "0x5f0B6625541d613ea33098d2afdE2aE466dbF1ec",
+    "0x028aDC72759edEEE4c3978F149BCA66F65f52e2f",
   );
 
   async function connect() {
