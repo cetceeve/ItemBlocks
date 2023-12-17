@@ -12,7 +12,7 @@
         tokenId: tokenId,
         //myOtherIndexedParam: "0x123456789...",
       }, // Using an array means OR: e.g. 20 or 23
-      fromBlock: 10221728,
+      fromBlock: 4906458,
       toBlock: "latest",
     });
     console.log(history);
