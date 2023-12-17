@@ -5,6 +5,14 @@ Create a digital passport for your physical items.
 
 ![100 Percent Coverage](./images/100coverage.png)
 
+## Static Analysis!
+
+[Slither Report](./contract/Slither-Report.md)
+
+## Fuzzing!
+
+![Echidna Fuzzing Results](./images/echidna.png)
+
 ## Description
 
 A dApp that allows users to create a digital passport for physical items and make the information associated with these items easily accessible.

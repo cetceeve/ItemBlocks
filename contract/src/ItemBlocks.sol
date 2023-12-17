@@ -33,13 +33,13 @@ contract ItemBlocks is ERC721, Ownable {
         _safeMint(to, tokenId);
     }
 
-    function createPassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {
+    function createPassport(uint tokenId, string memory name, string memory desc, string memory family, string memory url, string memory img) public returns(uint256) {
         _safeMint(msg.sender, tokenId);
         setCreator(msg.sender, tokenId);
         return updatePassport(tokenId, name, desc, family, url, img);
     }
 
-    function updatePassport(uint tokenId, string calldata name, string calldata desc, string calldata family, string calldata url, string calldata img) public returns(uint256) {        
+    function updatePassport(uint tokenId, string memory name, string memory desc, string memory family, string memory url, string memory img) public returns(uint256) {        
         require( isEligible(tokenId, msg.sender), "Must be the owner of the item or the creator of it" );
 
         itemPassports[tokenId] = Passport ({
