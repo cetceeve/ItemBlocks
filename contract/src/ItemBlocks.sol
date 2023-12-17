@@ -4,6 +4,13 @@ pragma solidity ^0.8.18;
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
+/**
+* @notice ItemBlocks is smart-contract that keeps tracking of items passports
+* and item information on chain. Providing high integrity.
+* 
+* @dev imports openzeppelin module to create NFTs representation
+* of the items on chain. 
+ */
 contract ItemBlocks is ERC721, Ownable {
     struct Passport {
         string name;
@@ -29,16 +36,59 @@ contract ItemBlocks is ERC721, Ownable {
         Ownable(initialOwner)
     {}
 
+    /**
+    * @notice safeMint function creates a new NFT for an item.
+    *
+    * @param to ethereum address for the user who creates the NFT.
+    * @param tokenId uint256 Id for the new token of the NFT.
+    *
+    * @dev calls the _safeMint of the openzeppelin module. Using this
+    * function creates the new NFT. 
+     */
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
     }
 
+    /**
+    * @notice createPassport function creates a new passport for a new item.
+    * 
+    * @param tokenId uint256 id for the new token that will create.
+    * @param name string a name of the new item.
+    * @param desc string a description for the new item.
+    * @param family string a category family for the new item. 
+    * @param url string a url for the new item (web-page item url).
+    * @param img string an image url so to present an image for the new item.
+    *
+    * @return NewPassport returns a new passport for the new item using the parameters.
+    * Here calls the updatePassport so to create the new passport.
+    *
+    * @dev createPassport function calls three functions
+    * _safeMint: Create a new NFT token.
+    * setCreator: Add creator for the new item.
+    * updatePassport: Create a new passport for the new item.
+    * 
+     */
     function createPassport(uint tokenId, string memory name, string memory desc, string memory family, string memory url, string memory img) public returns(uint256) {
         _safeMint(msg.sender, tokenId);
         setCreator(msg.sender, tokenId);
         return updatePassport(tokenId, name, desc, family, url, img);
     }
 
+    /**
+    * @notice updatePassport either creates a new passport or updates a current passport for an item.
+    * 
+    * @param tokenId uint256 id for the new token that will create.
+    * @param name string a name of the new item.
+    * @param desc string a description for the new item.
+    * @param family string a category family for the new item. 
+    * @param url string a url for the new item (web-page item url).
+    * @param img string an image url so to present an image for the new item.
+    *
+    * @return tokenId uint256 Id of the token.
+    *
+    * @dev updatePassport uses the itemPassports struct so to add the new information
+    * to the fields of the items' passport.
+     */
     function updatePassport(uint tokenId, string memory name, string memory desc, string memory family, string memory url, string memory img) public returns(uint256) {        
         require( isEligible(tokenId, msg.sender), "Must be the owner of the item or the creator of it" );
 
@@ -65,7 +115,7 @@ contract ItemBlocks is ERC721, Ownable {
     }
 
     /**
-    * @notice isEligible is a function that checks if the user is eligible for item informaton
+    * @notice isEligible is a function that checks if the user is eligible for item information
     * changes. 
     *
     * @param tokenId uint256 id of the item that the user wants to make the changes.
@@ -89,7 +139,7 @@ contract ItemBlocks is ERC721, Ownable {
     * @param creatorAddress ethereum address of the creator of the new item.
     * @param tokenId uint256 id of the token that is created.
     * 
-    * @dev fails if there is allread a creator for the specific tokenId.
+    * @dev fails if there is already a creator for the specific tokenId.
     * @dev fails if the user has a zero address.
      */
     function setCreator(address creatorAddress, uint256 tokenId) internal {
@@ -129,12 +179,12 @@ contract ItemBlocks is ERC721, Ownable {
     /**
     * @notice getCreatedItemTokens returns a list of user items.  
     * 
-    * @param userAddress ethereum user Address for whome all the items will be retun.
-    *                    Like user's intentory.
+    * @param userAddress ethereum user Address for whom all the items will be return.
+    * Like user's inventory.
     *
     * @return createdItems[] list of all user items.
     *
-    * @dev fails if the userAdderss is a zero address.
+    * @dev fails if the userAdders is a zero address.
      */
     function getCreatedItemTokens(address userAddress) public view returns(uint256[] memory) {
         require(userAddress != address(0), "You are not allowed to see the created tokens with an zero address.");
@@ -143,9 +193,9 @@ contract ItemBlocks is ERC721, Ownable {
     
 
     /**
-    * @notice getPassort is a function that returns a Passport for an item (tokenId).
+    * @notice getPassport is a function that returns a Passport for an item (tokenId).
     *
-    * @param tokenId uint256 id item's Id that we want to retun the Passport.
+    * @param tokenId uint256 id item's Id that we want to return the Passport.
     *
     * @return itemPassport[tokenId] the Passport of the item (token).
     *
