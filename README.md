@@ -1,31 +1,42 @@
 # ItemBlocks
 Create a digital passport for your physical items.
 
-## Testing!
+## Check it out!
 
-![100 Percent Coverage](./images/100coverage.png)
-
-## Static Analysis!
-
-[Slither Report](./contract/Slither-Report.md)
-
-## Fuzzing!
-
-![Echidna Fuzzing Results](./images/echidna.png)
+https://itemblocks.app.cloud.cbh.kth.se/
 
 ## Description
 
-A dApp that allows users to create a digital passport for physical items and make the information associated with these items easily accessible.
-To bring an item into the application users can create a QR-Code, that is stuck onto the item. The QR code is an encoding of the key that uniquely identifies this item in the cloud. Other users can scan the QR-Code to easily access the data of this item on the blockchain. This has the potential to break down data silos, e.g. across company databases.
-The users of our application can choose which data to associate with the item.
-Each item will have an owner, that can change the information about the item, but all changes will be visible in the item passport.
-We also have the role of manufacturer, which can change information in case there was a mistake on the first entry or if some critical flaw was discovered. Initially, the contract owners will decide who is a trusted manufacturer, but in the future, this could be managed by a DAO.
+ItemBlocks allows users to create a digital passport for their physical items and make the information associated with these items easily accessible.
+To bring an item into the application simply click on `create`, add the information, and the digital passport will be created on the Ethereum blockchain. The application will show a QR Code to the user which can be printed and put onto the physical item. The QR code is a link to our application with an encoding of the key that uniquely identifies this item on the blockchain. Other users can scan the QR-Code to easily access the data of this item on the blockchain. This has the potential to break down data silos, e.g. across company databases.
+
+![Screenshot Item Passport](./images/screenshot_item_passport.png)
+
+There are three roles in our system Owners, Creators, and Viewers. The Owner and the Creator of an item can edit the information about an item. Only Owners of an item can transfer the ownership to another user. All Ownership as well as information changes are stored on the blockchain. In our application, everyone can always access the information, ownership history, and update history of an item. In the update history, users can transparently see all changes that were made to the item passport, when they were made, which Ethereum address made the change, and if this address was the Creator or Owner of the item at the time of change.
+
+![Screenshot Item History](./images/screenshot_item_history.png)
+
+## Testing
+
+We used unit testing, static analysis as well as fuzzing to test our contract.
+We were able to achieve 100% test coverage and good results in the static analysis and fuzz tests.
+
+_Read more about our test setup in our wiki._
+
+### Coverage Report
+
+![100 Percent Coverage](./images/100coverage.png)
+
+### Static Analysis
+
+You can find the static analysis report in markdown format here:
+[Slither Report](./contract/Slither-Report.md)
+
+### Fuzzing
+
+![Echidna Fuzzing Results](./images/echidna.png)
+
 
 ## Technnology
 
-We will use Foundry to compile, (fuzz) test, and deploy our smart contracts.
-We can utilize Foundry GitHub-actions integration for a CI-CD pipeline.
-We will use Vyper as the smart contract language.
-An ERC721 (NFT) contact will be used to represent the items.
-We are currently planning to run on an Ethereum Layer 2 chain to reduce gas fees.
-We plan to create a website as our user interface, where users can easily check the item passport and see all the associated information. Since QR codes play an important role in our application the website design will be optimized for mobile devices.
+Please check out our wiki.
